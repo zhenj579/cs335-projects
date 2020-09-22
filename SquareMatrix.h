@@ -60,7 +60,7 @@ public:
     /* function: move constructor
      * transfer ownership of the temporary's resources to this object
      */
-    SquareMatrix(SquareMatrix<T>&& other) noexcept: sz(std::move(other.sz)), ptr(std::move(other.ptr))
+    SquareMatrix(SquareMatrix<T>&& other): sz(other.sz), ptr(other.ptr)
     {
         std::cout<<"move constructor called"<<std::endl;
         other.ptr = nullptr;
@@ -92,11 +92,11 @@ public:
 //    /* function: move assignment
 //     * transfer ownership of the resources from rhs to this object
 //     */
-    SquareMatrix<T>& operator=(SquareMatrix<T> &&rhs) noexcept
+    SquareMatrix<T>& operator=(SquareMatrix<T> &&rhs)
     {
         std::cout<<"move assignment called"<<std::endl;
-        sz = std::move(rhs.sz);
-        ptr = std::move(rhs.ptr);
+        sz = rhs.sz;
+        ptr = rhs.ptr;
         rhs.ptr = nullptr;
         rhs.sz = 0;
     }
@@ -135,7 +135,7 @@ public:
 
     T& at(size_t row, size_t column)
     {
-        if(row >= sz || column >= sz) throw std::out_of_range("row or col does not exist");
+        if(row >= sz || column >= sz || row < sz || column < sz) throw std::out_of_range("row or col does not exist");
         return ptr[row][column];
     }
 
