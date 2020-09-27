@@ -1,9 +1,6 @@
 #ifndef SQUAREMATRIX_H
 #define SQUAREMATRIX_H
 
-#include <cstdlib>
-#include <utility>
-#include <iostream>
 
 template <typename T>
 class SquareMatrix {
@@ -11,20 +8,7 @@ private:
     size_t sz; // max capacity of matrix
     T **ptr;
 public:
-    friend std::ostream& operator<<(std::ostream &os, const SquareMatrix<T> &matrix)
-    {
-        for(size_t i = 0; i < matrix.sz; i++)
-        {
-            for(size_t j = 0; j < matrix.sz; j++)
-            {
-                os<<matrix.ptr[i][j]<<" ";
-            }
-            os<<std::endl;
-        }
-        return os;
-    }
-
-    SquareMatrix() : sz(0), ptr(nullptr) {  } //default constructor
+    SquareMatrix() : sz(0), ptr(nullptr) { } //default constructor
 
     //big 5
     /* function: destructor
@@ -47,7 +31,6 @@ public:
      */
     SquareMatrix(const SquareMatrix<T>& other) : sz(other.sz), ptr(new T*[sz])
     {
-        std::cout<<"copy constructor called"<<std::endl;
         resize(sz);
         for(size_t i = 0; i < sz; i++)
         {
@@ -62,7 +45,6 @@ public:
      */
     SquareMatrix(SquareMatrix<T>&& other): sz(other.sz), ptr(other.ptr)
     {
-        std::cout<<"move constructor called"<<std::endl;
         other.ptr = nullptr;
         other.sz = 0;
     }
@@ -73,17 +55,15 @@ public:
 //     */
     SquareMatrix<T>& operator=(const SquareMatrix<T> &rhs)
     {
-        std::cout<<"copy assignment called"<<std::endl;
-        if(this == &rhs)
+        if(this != &rhs)
         {
-            return *this;
-        }
-        resize(rhs.sz);
-        for(size_t i = 0; i < sz; i++)
-        {
-            for(size_t j = 0; j < sz; j++)
+            resize(rhs.sz);
+            for(size_t i = 0; i < sz; i++)
             {
-                ptr[i][j] = rhs.ptr[i][j];
+                for(size_t j = 0; j < sz; j++)
+                {
+                    ptr[i][j] = rhs.ptr[i][j];
+                }
             }
         }
         return *this;
@@ -94,14 +74,13 @@ public:
 //     */
     SquareMatrix<T>& operator=(SquareMatrix<T> &&rhs)
     {
-        std::cout<<"move assignment called"<<std::endl;
         sz = rhs.sz;
         ptr = rhs.ptr;
         rhs.ptr = nullptr;
         rhs.sz = 0;
     }
 
-    bool operator==(const SquareMatrix<T> &rhs)
+    bool operator==(const SquareMatrix<T> &rhs) const
     {
         if(ptr == rhs.ptr) return true;
         if(sz != rhs.sz) return false;
@@ -126,16 +105,13 @@ public:
         ptr = new T*[sz];
         for(size_t i = 0; i < sz; i++)
         {
-            for(size_t j = 0; j < sz; j++)
-            {
-                ptr[i] = new T[sz];
-            }
+            ptr[i] = new T[sz];
         }
     }
 
     T& at(size_t row, size_t column)
     {
-        if(row >= sz || column >= sz || row < sz || column < sz) throw std::out_of_range("row or col does not exist");
+        if(row >= sz || column >= sz || row < 0 || column < 0) throw std::out_of_range("row or col does not exist");
         return ptr[row][column];
     }
 
