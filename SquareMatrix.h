@@ -29,9 +29,9 @@ public:
      * copy the other square matrix's members
      * iterate through both matrices and copy the content of other to this object
      */
-    SquareMatrix(const SquareMatrix<T>& other) : sz(other.sz), ptr(new T*[sz])
+    SquareMatrix(const SquareMatrix<T>& other)
     {
-        resize(sz);
+        resize(other.sz);
         for(size_t i = 0; i < sz; i++)
         {
             for(size_t j = 0; j < sz; j++)
@@ -78,6 +78,7 @@ public:
         ptr = rhs.ptr;
         rhs.ptr = nullptr;
         rhs.sz = 0;
+        return *this;
     }
 
     bool operator==(const SquareMatrix<T> &rhs) const
