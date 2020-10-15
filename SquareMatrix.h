@@ -29,7 +29,7 @@ public:
      * copy the other square matrix's members
      * iterate through both matrices and copy the content of other to this object
      */
-    SquareMatrix(const SquareMatrix<T>& other)
+    SquareMatrix(const SquareMatrix<T>& other) : sz(other.sz), ptr(other.ptr)
     {
         resize(other.sz);
         for(size_t i = 0; i < sz; i++)
@@ -50,6 +50,7 @@ public:
     }
 //
 //    /* function: copy assignment
+//     * destroy the current object and free up all resources
 //     * use the current allocated memory of this object
 //     * and copy the members of rhs
 //     */
@@ -57,6 +58,7 @@ public:
     {
         if(this != &rhs)
         {
+            ~SquareMatrix<T>();
             resize(rhs.sz);
             for(size_t i = 0; i < sz; i++)
             {
@@ -74,13 +76,16 @@ public:
 //     */
     SquareMatrix<T>& operator=(SquareMatrix<T> &&rhs)
     {
-        sz = rhs.sz;
-        ptr = rhs.ptr;
-        rhs.ptr = nullptr;
-        rhs.sz = 0;
+        if(this != &rhs)
+        {
+            sz = rhs.sz;
+            ptr = rhs.ptr;
+            rhs.ptr = nullptr;
+            rhs.sz = 0;
+        }
         return *this;
     }
-
+    // two matrices are equal iff sizes are equal and all elements at row i column j are equal in both matrices
     bool operator==(const SquareMatrix<T> &rhs) const
     {
         if(ptr == rhs.ptr) return true;
@@ -97,16 +102,22 @@ public:
 
     void resize(size_t new_size)
     {
-        for(size_t i = 0; i < sz; i++)
+        if(new_size > 0)
         {
-            delete[] ptr[i];
-        }
-        delete[] ptr;
-        sz = new_size;
-        ptr = new T*[sz];
-        for(size_t i = 0; i < sz; i++)
-        {
-            ptr[i] = new T[sz];
+            if(this->sz > 0)
+            {
+                for(size_t i = 0; i < sz; i++)
+                {
+                    delete[] ptr[i];
+                }
+                delete[] ptr;
+            }
+            sz = new_size;
+            ptr = new T*[sz];
+            for(size_t i = 0; i < sz; i++)
+            {
+                ptr[i] = new T[sz];
+            }
         }
     }
 
