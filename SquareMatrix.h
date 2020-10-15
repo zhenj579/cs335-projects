@@ -29,7 +29,7 @@ public:
      * copy the other square matrix's members
      * iterate through both matrices and copy the content of other to this object
      */
-    SquareMatrix(const SquareMatrix<T>& other) : sz(other.sz), ptr(other.ptr)
+    SquareMatrix(const SquareMatrix<T>& other) : sz(0), ptr(nullptr)
     {
         resize(other.sz);
         for(size_t i = 0; i < sz; i++)
@@ -48,12 +48,11 @@ public:
         other.ptr = nullptr;
         other.sz = 0;
     }
-//
-//    /* function: copy assignment
-//     * destroy the current object and free up all resources
-//     * use the current allocated memory of this object
-//     * and copy the members of rhs
-//     */
+    /* function: copy assignment
+     * destroy the current object and free up all resources
+     * use the current allocated memory of this object
+     * and copy the members of rhs
+     */
     SquareMatrix<T>& operator=(const SquareMatrix<T> &rhs)
     {
         if(this != &rhs)
@@ -71,13 +70,15 @@ public:
         return *this;
     }
 
-//    /* function: move assignment
-//     * transfer ownership of the resources from rhs to this object
-//     */
+    /* function: move assignment
+    * destroy previous object
+    * transfer ownership of the resources from rhs to this object
+    */
     SquareMatrix<T>& operator=(SquareMatrix<T> &&rhs)
     {
         if(this != &rhs)
         {
+            this->~SquareMatrix<T>();
             sz = rhs.sz;
             ptr = rhs.ptr;
             rhs.ptr = nullptr;
@@ -99,18 +100,14 @@ public:
         }
         return true;
     }
-
+    // destroy all previous content and reallocate memory for new size
     void resize(size_t new_size)
     {
         if(new_size > 0)
         {
             if(this->sz > 0)
             {
-                for(size_t i = 0; i < sz; i++)
-                {
-                    delete[] ptr[i];
-                }
-                delete[] ptr;
+                this->~SquareMatrix<T>();
             }
             sz = new_size;
             ptr = new T*[sz];
