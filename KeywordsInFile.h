@@ -12,9 +12,9 @@ private:
 public:
     KeywordsInFile() = delete;
     KeywordsInFile(const std::string &filename_with_keywords, const std::string &filename_with_text);
-    bool KeywordFound(const std::string &keyword);
-    int KeywordInLine(const std::string &keyword, const int &line_number);
-    int TotalOccurrences(const std::string &keyword);
+    bool KeywordFound(const std::string &keyword) const;
+    int KeywordInLine(const std::string &keyword, const int &line_number) const;
+    int TotalOccurrences(const std::string &keyword) const;
 
     friend std::ostream& operator<<(std::ostream &os, const KeywordsInFile &kif);
 };
