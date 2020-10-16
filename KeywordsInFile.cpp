@@ -37,6 +37,7 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
             }
         }
     }
+    file.close();
 }
 bool KeywordsInFile::KeywordFound(const std::string &keyword) const
 {
@@ -69,7 +70,7 @@ std::ostream& operator<<(std::ostream& os, const KeywordsInFile &kif)
         {
             os<<" Keyword: "<<it1.first<<" Occurrences: "<<it1.second<<std::endl;
         }
+        os<<"----------------------------------------------"<<std::endl;
     }
-
     return os;
 }
