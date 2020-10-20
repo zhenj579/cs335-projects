@@ -22,12 +22,7 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
     file.open(filename_with_text);
     while(!file.eof())
     {
-
         c = file.get();
-        if(c == '\n')
-        {
-            line_number++;
-        }
         if(!isalpha(c))
         {
             bool foundKeyword = keywords.find(word) != keywords.end();
@@ -57,6 +52,10 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
         else
         {
             word+=c;
+        }
+        if(c == '\n')
+        {
+            line_number++;
         }
     }
     file.close();
