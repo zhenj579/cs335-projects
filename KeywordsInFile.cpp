@@ -11,7 +11,7 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
         if(!isalpha(c))
         {
             keywords.insert(std::make_pair(word, 0)); // insert all keywords to unordered_map
-            word = "";
+            word.clear();
         }
         else
         {
@@ -47,7 +47,7 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
                     keywords_in_line.at(line_number).at(word)++; // if line_number exists and word exists, just increment the existing number
                 }
             }
-            word="";
+            word.clear();
         }
         else
         {
