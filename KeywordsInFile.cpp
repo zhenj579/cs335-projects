@@ -63,7 +63,9 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
 }
 bool KeywordsInFile::KeywordFound(const std::string &keyword) const
 {
-    return keywords.find(keyword) != keywords.end();
+    bool keyword_exists = keywords.find(keyword) != keywords.end();
+
+    return keyword_exists && keywords.at(keyword) > 0;
 }
 int KeywordsInFile::KeywordInLine(const std::string &keyword, const int &line_number) const
 {
