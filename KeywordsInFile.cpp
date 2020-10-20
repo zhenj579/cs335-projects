@@ -3,41 +3,60 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
 {
     std::ifstream file(filename_with_keywords);
     std::string word;
+    char c;
     int line_number = 1;
-    while(file>>word)
+    while(!file.eof())
     {
-        keywords.insert(std::make_pair(word, 0)); // insert all keywords to unordered_map
+        c = file.get();
+        if(!isalpha(c))
+        {
+            keywords.insert(std::make_pair(word, 0)); // insert all keywords to unordered_map
+            word = "";
+        }
+        else
+        {
+            word+=c;
+        }
     }
     file.close();
     file.open(filename_with_text);
-    while(file>>word)
+    while(!file.eof())
     {
-        bool foundKeyword = keywords.find(word) != keywords.end();
-        if(file.peek() == '\n')
+
+        c = file.get();
+        if(c == '\n')
         {
             line_number++;
-            continue;
         }
-        else if(foundKeyword)
+        if(!isalpha(c))
         {
-            bool line_number_exists = keywords_in_line.find(line_number) != keywords_in_line.end();
-            bool keyword_exists_in_line_number = line_number_exists && keywords_in_line.at(line_number).find(word) != keywords_in_line.at(line_number).end();
-            keywords.at(word)++;
-            //also keep track of the line number and keyword occurrences with another unordered_map
-            if(!line_number_exists)
+            bool foundKeyword = keywords.find(word) != keywords.end();
+            if(foundKeyword)
             {
-                std::unordered_map<std::string, int> entry; // create a new value for line_number unordered_map, this will keep track of the keyword and occurrences
-                entry.insert(std::make_pair(word, 1));
-                keywords_in_line.insert(std::make_pair(line_number, entry));
+                bool line_number_exists = keywords_in_line.find(line_number) != keywords_in_line.end();
+                bool keyword_exists_in_line_number = line_number_exists && keywords_in_line.at(line_number).find(word) != keywords_in_line.at(line_number).end();
+                keywords.at(word)++;
+                //also keep track of the line number and keyword occurrences with another unordered_map
+                if(!line_number_exists)
+                {
+                    std::unordered_map<std::string, int> entry; // create a new value for line_number unordered_map, this will keep track of the keyword and occurrences
+                    entry.insert(std::make_pair(word, 1));
+                    keywords_in_line.insert(std::make_pair(line_number, entry));
+                }
+                else if(!keyword_exists_in_line_number) // if line_number exists but the keyword was first encountered
+                {
+                    keywords_in_line.at(line_number).insert(std::make_pair(word, 1));
+                }
+                else
+                {
+                    keywords_in_line.at(line_number).at(word)++; // if line_number exists and word exists, just increment the existing number
+                }
             }
-            else if(!keyword_exists_in_line_number) // if line_number exists but the keyword was first encountered
-            {
-                keywords_in_line.at(line_number).insert(std::make_pair(word, 1));
-            }
-            else
-            {
-                keywords_in_line.at(line_number).at(word)++; // if line_number exists and word exists, just increment the existing number
-            }
+            word="";
+        }
+        else
+        {
+            word+=c;
         }
     }
     file.close();
