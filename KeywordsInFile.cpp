@@ -2,6 +2,11 @@
 KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const std::string &filename_with_text)
 {
     std::ifstream file(filename_with_keywords);
+    if(file.fail())
+    {
+        std::cout<<"failed to open file"<<std::endl;
+        return;
+    }
     std::string word;
     char c;
     int line_number = 1;
@@ -20,6 +25,11 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
     }
     file.close();
     file.open(filename_with_text);
+    if(file.fail())
+    {
+        std::cout<<"failed to open file"<<std::endl;
+        return;
+    }
     while(!file.eof())
     {
         c = file.get();
