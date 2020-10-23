@@ -104,20 +104,9 @@ int KeywordsInFile::TotalOccurrences(const std::string &keyword) const
 
 std::ostream& operator<<(std::ostream& os, const KeywordsInFile &kif)
 {
-    os<<"KEYWORDS AND OCCURRENCES:"<<std::endl;
     for(const auto &it : kif.keywords)
     {
         os<<"Keyword: "<<it.first<<" Occurrences: "<<it.second<<std::endl;
-    }
-    os<<"----------------------------------------------"<<std::endl;
-    os<<"LINE NUMBERS WITH KEYWORDS AND OCCURRENCES:"<<std::endl;
-    for(const auto &it : kif.keywords_in_line)
-    {
-        for(const auto &it1 : it.second)
-        {
-            os<<"Line Number: "<<it.first<<" Keyword: "<<it1.first<<" Occurrences: "<<it1.second<<std::endl;
-        }
-        os<<"----------------------------------------------"<<std::endl;
     }
     return os;
 }
