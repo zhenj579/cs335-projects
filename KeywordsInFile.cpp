@@ -10,18 +10,15 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
     std::string word;
     char c;
     int line_number = 1;
-    while(!file.eof())
+    while(file.good())
     {
         c = file.get();
-        if(!isalpha(c))
+        if(!isalpha(c) && !word.empty())
         {
             keywords.insert(std::make_pair(word, 0)); // insert all keywords to unordered_map
             word.clear();
         }
-        else
-        {
-            word+=c;
-        }
+        if(isalpha(c)) word+=c;
     }
     file.close();
     file.open(filename_with_text);
@@ -30,10 +27,10 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
         std::cout<<"failed to open file"<<std::endl;
         return;
     }
-    while(!file.eof())
+    while(file.good())
     {
         c = file.get();
-        if(!isalpha(c))
+        if(!isalpha(c) && !word.empty())
         {
             bool foundKeyword = keywords.find(word) != keywords.end();
             if(foundKeyword)
@@ -59,10 +56,7 @@ KeywordsInFile::KeywordsInFile(const std::string &filename_with_keywords, const 
             }
             word.clear();
         }
-        else
-        {
-            word+=c;
-        }
+        if(isalpha(c)) word+=c;
         if(c == '\n')
         {
             line_number++;
