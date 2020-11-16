@@ -1,6 +1,7 @@
 #include "Field.h"
 
 Field::Field(const std::vector<std::vector<int>> &v) {
+    if(v.empty()) return;
     dp = std::vector<std::vector<int>>(v.size(),std::vector<int>(v[0].size()));
     for(int i = 0; i < v.size(); i++)
     {
@@ -28,6 +29,7 @@ Field::Field(std::vector<std::vector<int>> && rhs) {
 }
 
 int Field::Weight(int x1, int y1, int x2, int y2) {
+    if(dp.empty()) return 0;
     bool outOfBounds = x1 < 0 || y1 < 0  || x2 < 0 || y2 < 0 || x1 >= dp[0].size() || x2 >= dp[0].size() || y1 >= dp.size() || y2 >= dp.size();
     if(outOfBounds) throw std::out_of_range("out of bounds");
     int startx = 0;
@@ -59,8 +61,8 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
 
 int Field::PathCost() {
     if(dp.empty()) return 0;
-    else if(dp.size() == 1) return dp[0][dp[0].size()-1];
-    else if(dp[0].size() == 1) return dp[dp.size()-1][0];
+    else if(dp.size() == 1) return dp[0][dp[0].size()-1]; // horizontal matrix
+    else if(dp[0].size() == 1) return dp[dp.size()-1][0]; // vertical matrix
     int cost = dp[0][0];
     int i = 0;
     int j = 0;
