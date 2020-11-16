@@ -28,22 +28,31 @@ Field::Field(std::vector<std::vector<int>> && rhs) {
 }
 
 int Field::Weight(int x1, int y1, int x2, int y2) {
-    if(x1 < 0 || y1 < 0  || x2 < 0 || y2 < 0 || x1 >= dp[0].size() || x2 >= dp[0].size() || y1 >= dp.size() || y2 >= dp.size()) throw std::out_of_range("out of bounds");
+    bool outOfBounds = x1 < 0 || y1 < 0  || x2 < 0 || y2 < 0 || x1 >= dp[0].size() || x2 >= dp[0].size() || y1 >= dp.size() || y2 >= dp.size();
+    if(outOfBounds) throw std::out_of_range("out of bounds");
     int startx = 0;
     int endx = 0;
     int starty = 0;
     int endy = 0;
+
+    bool verticalLineAtLeft = endx == 0 && startx == endx;
     startx = std::min(x1,x2); // min(1,4) = 1
     endx = std::max(x1,x2); // max(1,4) =  4
     starty = std::min(y1,y2); // min(2,0) = 0
     endy = std::max(y1,y2); // max(2,0) = 2
     //y in dp is x
     //x in dp is y
-    if(startx == endx && starty == endy) return dp[starty][startx]-dp[starty-1][startx] - dp[starty][startx-1] + dp[starty-1][startx-1]; // same point
-    if(starty == endy && endy > 0) return dp[endy][endx] - dp[endy-1][endx]; // horizontal line
-    if(endy == 0 && starty == endy) return dp[endy][endx]-dp[endy][startx-1 >= 0 ? startx-1 : 0]; // horizontal line but at the top
-    if(startx == endx && endx > 0) return dp[endy][endx] - dp[endy][endx-1]; // vertical line
-    if(endx == 0 && startx == endx) return dp[endy][endx];
+    bool samePointAtTop = x1 == x2 && y1 == 0 && y2 == 0; // same point at the outer most part of the matrix
+    bool samePoint = startx == endx && starty == endy; // same point not at border of matrix
+    bool horizontalLine = starty == endy && endy > 0; //points form a horizontal line
+    bool horizontalLineAtTop = endy == 0 && starty == endy;
+    bool verticalLine = startx == endx && endx > 0;
+    if(samePointAtTop) return dp[y1][x1];
+    if(samePoint) return dp[starty][startx]-dp[starty-1][startx] - dp[starty][startx-1] + dp[starty-1][startx-1]; // same point
+    if(horizontalLine) return dp[endy][endx] - dp[endy-1][endx]; // horizontal line
+    if(horizontalLineAtTop) return dp[endy][endx]-dp[endy][startx-1 >= 0 ? startx-1 : 0]; // horizontal line but at the top
+    if(verticalLine) return dp[endy][endx] - dp[endy][endx-1]; // vertical line
+    if(verticalLineAtLeft) return dp[endy][endx];
     return dp[endy][endx] - dp[starty+1][startx-1] - dp[starty-1][startx+1] + dp[starty-1][startx-1];
 
 }
