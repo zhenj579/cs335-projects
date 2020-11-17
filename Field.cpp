@@ -136,6 +136,21 @@ int Field::PathCost() {
             cost+=down;
             i++;
         }
+        else if(j == 0)
+        {
+            right = dp[i][j+1]-curr-dp[i-1][j+1]+dp[i-1][j];
+            down = dp[i+1][j]-curr;
+            if(right < down)
+            {
+                cost+=right;
+                j++;
+            }
+            else
+            {
+                cost+=down;
+                i++;
+            }
+        }
         else
         {
             right = dp[i][j+1]-curr-dp[i-1][j+1]+dp[i-1][j];
