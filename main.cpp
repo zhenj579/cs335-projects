@@ -229,5 +229,11 @@ int main() {
     Field field12(std::move(v12));
     assert(field12.PathCost() == 25);
     assert(field12.Weight(1,2,4,0) == 42);
+
+    vector<vector<int>> v13 = { {}, {}, {} };
+    Field field13(std::move(v13));
+    assert(field13.PathCost() == 0);
+
+
     return 0;
 }

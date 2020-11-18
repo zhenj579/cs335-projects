@@ -13,8 +13,6 @@ public:
     Field(std::vector<std::vector<int>> &&);
     int Weight(int x1, int y1, int x2, int y2);
     int PathCost();
-
-    friend std::ostream& operator<<(std::ostream& os, const Field &f);
 };
 
 
