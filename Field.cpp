@@ -96,11 +96,6 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
         return dp[endy][endx] - dp[endy][startx-1] - dp[starty-1][endx] + dp[starty-1][startx-1];
     }
     if(leftSquare) return dp[endy][endx] - dp[starty-1][endx];
-//    if(middleSquare)
-//    {
-//        if(starty == 0) return dp[endy][endx] - dp[endy][startx-1];
-//        return dp[endy][endx] - dp[endy][startx-1] - dp[starty-1][endx] + dp[starty-1][startx-1];
-//    }
     return dp[endy][endx] - dp[starty+1][startx-1] - dp[starty-1][startx+1] + dp[starty-1][startx-1];
 
 }
