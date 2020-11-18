@@ -101,7 +101,7 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
 }
 
 int Field::PathCost() {
-    if(dp.empty()) return 0;
+    if(dp.empty() || (dp.size() >= 1 && dp[0].empty())) return 0;
     else if(dp.size() == 1) return dp[0][dp[0].size()-1]; // horizontal matrix
     else if(dp[0].size() == 1) return dp[dp.size()-1][0]; // vertical matrix
     int cost = dp[0][0];
