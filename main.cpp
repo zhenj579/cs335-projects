@@ -212,5 +212,22 @@ int main() {
     Field field10(v10);
     assert(field10.PathCost() == 13);
 
+    vector<vector<int>> v11 = { { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6}};
+    Field field11(v11);
+    assert(field11.PathCost() == 25);
+    assert(field11.Weight(1,2,4,0) == 42);
+
+    vector<vector<int>> v12 = { { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6},
+                                { 1,2,3,4,5,6}};
+    Field field12(std::move(v12));
+    assert(field12.PathCost() == 25);
+    assert(field12.Weight(1,2,4,0) == 42);
     return 0;
 }

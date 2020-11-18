@@ -192,17 +192,4 @@ int Field::PathCost() {
     return cost;
 }
 
-std::ostream &operator<<(std::ostream &os, const Field &f) {
-    for(const auto &v : f.dp)
-    {
-        for(const auto &e : v)
-        {
-            os<<e<<" ";
-        }
-        os<<"\n";
-    }
-    return os;
-
-}
-
 
