@@ -50,7 +50,10 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
     bool verticalLine = startx == endx && endx > 0;
     bool verticalLineAtLeft = endx == 0 && startx == 0;
     bool topLeftSquare = startx == 0 && starty == 0;
-    bool topRightSquare = endx == dp[0].size()-1;
+    bool leftSquare = startx == 0 && endx >= 1;
+    bool topRightSquare = endx == dp[0].size()-1 && starty == 0;
+    bool bottomRightSquare = endy == dp.size()-1 && endx == dp[0].size()-1;
+    bool middleSquare = startx >= 1 && endx < dp[0].size()-1;
     if(samePointAtTop)
     {
         if(startx > 0)
@@ -67,7 +70,14 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
         }
         return dp[starty][startx]-dp[starty-1][startx] - dp[starty][startx-1] + dp[starty-1][startx-1]; // same point
     }
-    if(horizontalLine) return dp[endy][endx] - dp[endy-1][endx] - dp[starty][startx-1] + dp[starty-1][startx-1]; // horizontal line
+    if(horizontalLine)
+    {
+        if(startx == 0)
+        {
+            return dp[endy][endx]-dp[endy-1][endx];
+        }
+        return dp[endy][endx] - dp[endy-1][endx] - dp[starty][startx-1] + dp[starty-1][startx-1]; // horizontal line
+    }
     if(horizontalLineAtTop)
     {
         if(startx == 0)
@@ -78,7 +88,19 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
     }
     if(verticalLineAtLeft || topLeftSquare) return dp[endy][endx];
     if(verticalLine) return dp[endy][endx] - dp[endy][endx-1]; // vertical line
-    if(topRightSquare) return dp[dp.size()-1-endy][dp[0].size()-1] - dp[endy][startx-1];
+    if(topRightSquare) return dp[endy][endx]-dp[endy][startx-1];
+    if(bottomRightSquare || middleSquare)
+    {
+//        return dp[endy][endx]-dp[starty-1][endx];
+        if(starty == 0) return dp[endy][endx]-dp[endy][startx-1];
+        return dp[endy][endx] - dp[endy][startx-1] - dp[starty-1][endx] + dp[starty-1][startx-1];
+    }
+    if(leftSquare) return dp[endy][endx] - dp[starty-1][endx];
+//    if(middleSquare)
+//    {
+//        if(starty == 0) return dp[endy][endx] - dp[endy][startx-1];
+//        return dp[endy][endx] - dp[endy][startx-1] - dp[starty-1][endx] + dp[starty-1][startx-1];
+//    }
     return dp[endy][endx] - dp[starty+1][startx-1] - dp[starty-1][startx+1] + dp[starty-1][startx-1];
 
 }
