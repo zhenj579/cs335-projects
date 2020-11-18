@@ -8,7 +8,7 @@ int main() {
     vector<vector<int>> v1 = { {1},
                                {1},
                                {1}};
-    Field field(std::move(v1));
+    Field field(v1);
     assert(field.PathCost() == 3);
     assert(field.Weight(0,0,0,0) == 1);
     assert(field.Weight(0,1,0,0) == 2);
@@ -21,7 +21,7 @@ int main() {
 //    field.Weight(1,0,1,0); oob
 //    field.Weight(0,2,0,3); oob
     vector<vector<int>> v2 = { {1,1,1} };
-    Field field1(std::move(v2));
+    Field field1(v2);
     assert(field1.PathCost() == 3);
     assert(field1.Weight(0,0,0,0) == 1);
     assert(field1.Weight(1,0,1,0) == 1);
@@ -37,7 +37,7 @@ int main() {
 
 
     vector<vector<int>> v3 = { {1} };
-    Field field2(std::move(v3));
+    Field field2(v3);
     assert(field2.PathCost()==1);
     assert(field2.Weight(0,0,0,0) == 1);
 //    field2.Weight(1,0,0,1); oob
@@ -45,7 +45,7 @@ int main() {
     vector<vector<int>> v4 = { {1,2},
                                {1,2},
                                {1,2} };
-    Field field3(std::move(v4));
+    Field field3(v4);
     assert(field3.PathCost()==5);
     assert(field3.Weight(0,0,0,0) == 1);
     assert(field3.Weight(0,0,1,2) == 9);
@@ -60,7 +60,7 @@ int main() {
 
     vector<vector<int>> v5 = { {1,2,3},
                                {1,2,3} };
-    Field field4(std::move(v5));
+    Field field4(v5);
     assert(field4.Weight(0,0,0,0) == 1);
     assert(field4.Weight(1,0,1,0) == 2);
     assert(field4.Weight(2,0,2,0) == 3);
@@ -107,7 +107,7 @@ int main() {
     vector<vector<int>> v6 = { {1,2,3},
                                {1,2,3},
                                {1,2,3} };
-    Field field5(std::move(v6));
+    Field field5(v6);
     assert(field5.PathCost() == 8);
     assert(field5.Weight(0,1,1,2)==6);
     assert(field5.Weight(1,2,0,1)==6);
@@ -142,7 +142,7 @@ int main() {
 
     vector<vector<int>> v7= {  {1,2},
                                {1,2}};
-    Field field7(std::move(v7));
+    Field field7(v7);
     assert(field7.PathCost() == 4);
     assert(field7.Weight(0,0,0,0) == 1);
     assert(field7.Weight(1,0,1,0) == 2);
@@ -161,7 +161,7 @@ int main() {
                                {1,2,3,4},
                                {1,2,3,4},
                                {1,2,3,4} };
-    Field field8(std::move(v8));
+    Field field8(v8);
     assert(field8.Weight(3,3,2,2)==14);
     assert(field8.PathCost() == 13);
     assert(field8.Weight(2,1,3,2)==14);
@@ -193,7 +193,7 @@ int main() {
                                {1,2,3,4,5},
                                {1,2,3,4,5},
                                {1,2,3,4,5} };
-    Field field9(std::move(v9));
+    Field field9(v9);
     assert(field9.Weight(4,3,2,1)==36);
     assert(field9.Weight(4,3,1,1)==42);
     assert(field9.Weight(3,3,1,1)==27);
@@ -209,7 +209,8 @@ int main() {
                                {4,1,1,1,1},
                                {5,2,3,10,5},
                                {4,2,3,1,1} };
-    Field field10(std::move(v10));
+    Field field10(v10);
     assert(field10.PathCost() == 13);
+
     return 0;
 }
