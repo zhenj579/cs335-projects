@@ -234,6 +234,17 @@ int main() {
     Field field13(std::move(v13));
     assert(field13.PathCost() == 0);
 
+    vector<vector<int>> v14 = { {8,9,0,0}, {4,5,6,0}, {3,2,4,7}};
+    Field field15(v14);
+    assert(field15.PathCost() == 24);
+    Field field14(std::move(v14));
+    assert(field14.PathCost() == 24);
+
+    vector<vector<int>> v120 = { };
+    Field field16(v120);
+    assert(field16.PathCost() == 0);
+
+
 
     return 0;
 }

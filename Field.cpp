@@ -1,6 +1,7 @@
 #include "Field.h"
 
-Field::Field(const std::vector<std::vector<int>> &v) {
+Field::Field(const std::vector<std::vector<int>> &v)
+{
     if(v.empty()) return;
     dp = std::vector<std::vector<int>>(v.size(),std::vector<int>(v[0].size()));
     for(int i = 0; i < v.size(); i++)
@@ -13,9 +14,13 @@ Field::Field(const std::vector<std::vector<int>> &v) {
             else if(i > 0 && j > 0) dp[i][j]+=dp[i-1][j]+dp[i][j-1]-dp[i-1][j-1];
         }
     }
+    computePathCost(v);
 }
 
-Field::Field(std::vector<std::vector<int>> && rhs) {
+Field::Field(std::vector<std::vector<int>> && rhs)
+{
+    std::vector<std::vector<int>> dpPathCost(rhs.size(), std::vector<int>(rhs[0].size()));
+    computePathCost(rhs);
     dp = std::move(rhs);
     for(int i = 0; i < dp.size(); i++)
     {
@@ -26,9 +31,11 @@ Field::Field(std::vector<std::vector<int>> && rhs) {
             else if(i > 0 && j > 0) dp[i][j]+=dp[i-1][j]+dp[i][j-1]-dp[i-1][j-1];
         }
     }
+
 }
 
-int Field::Weight(int x1, int y1, int x2, int y2) {
+int Field::Weight(int x1, int y1, int x2, int y2) const
+{
     if(dp.empty()) return 0;
     bool outOfBounds = x1 < 0 || y1 < 0  || x2 < 0 || y2 < 0 || x1 >= dp[0].size() || x2 >= dp[0].size() || y1 >= dp.size() || y2 >= dp.size();
     if(outOfBounds) throw std::out_of_range("out of bounds");
@@ -100,90 +107,35 @@ int Field::Weight(int x1, int y1, int x2, int y2) {
 
 }
 
-int Field::PathCost() {
-    if(dp.empty() || (dp.size() >= 1 && dp[0].empty())) return 0;
-    else if(dp.size() == 1) return dp[0][dp[0].size()-1]; // horizontal matrix
-    else if(dp[0].size() == 1) return dp[dp.size()-1][0]; // vertical matrix
-    int cost = dp[0][0];
-    int i = 0;
-    int j = 0;
-    int curr = 0,right = 0,down = 0;
-    while(i != dp.size()-1 || j != dp[0].size()-1)
+void Field::computePathCost(const std::vector<std::vector<int>> &v)
+{
+    std::vector<std::vector<int>> dpPathCost(v.size(), std::vector<int>(v[0].size()));
+    if(v.empty() || v[0].empty()) cost = 0;
+    else
     {
-        curr = dp[i][j];
-        if(i == 0 && j == 0)
+        dpPathCost[0][0] = v[0][0];
+
+        for(int i = 1; i < v.size(); i++)
         {
-            right = dp[i][j+1]-curr;
-            down = dp[i+1][j]-curr;
-            if(right < down)
+            dpPathCost[i][0] = dpPathCost[i-1][0] + v[i][0];
+        }
+        for(int i = 1; i < v[0].size(); i++)
+        {
+            dpPathCost[0][i] = dpPathCost[0][i-1] + v[0][i];
+        }
+        for(int i = 1; i < v.size(); i++)
+        {
+            for(int j = 1; j < v[i].size(); j++)
             {
-                cost+=right;
-                j++;
-            }
-            else
-            {
-                cost+=down;
-                i++;
+                dpPathCost[i][j] = std::min(dpPathCost[i-1][j], dpPathCost[i][j-1]) + v[i][j];
             }
         }
-        else if(i == 0 && j < dp[0].size()-1)
-        {
-            right = dp[i][j+1]-curr;
-            down = dp[i+1][j]-curr-dp[i+1][j-1]+dp[i][j-1];
-            if(right < down)
-            {
-                cost+=right;
-                j++;
-            }
-            else
-            {
-                cost+=down;
-                i++;
-            }
-        }
-        else if(i == dp.size()-1)
-        {
-            right = dp[i][j+1]-curr-dp[i-1][j+1]+dp[i-1][j];
-            cost+=right;
-            j++;
-        }
-        else if(j == dp[0].size()-1)
-        {
-            down = dp[i+1][j]-dp[i+1][j-1]-curr+dp[i][j-1];
-            cost+=down;
-            i++;
-        }
-        else if(j == 0)
-        {
-            right = dp[i][j+1]-curr-dp[i-1][j+1]+dp[i-1][j];
-            down = dp[i+1][j]-curr;
-            if(right < down)
-            {
-                cost+=right;
-                j++;
-            }
-            else
-            {
-                cost+=down;
-                i++;
-            }
-        }
-        else
-        {
-            right = dp[i][j+1]-curr-dp[i-1][j+1]+dp[i-1][j];
-            down = dp[i+1][j]-curr-dp[i+1][j-1]+dp[i][j-1];
-            if(right < down)
-            {
-                cost+=right;
-                j++;
-            }
-            else
-            {
-                cost+=down;
-                i++;
-            }
-        }
+        cost = dpPathCost[dpPathCost.size()-1][dpPathCost[0].size()-1];
     }
+}
+
+int Field::PathCost() const
+{
     return cost;
 }
 
