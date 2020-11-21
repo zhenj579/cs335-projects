@@ -1,5 +1,32 @@
 #include "Field.h"
 
+void Field::computePathCost(const std::vector<std::vector<int>> &v)
+{
+    std::vector<std::vector<int>> dpPathCost(v.size(), std::vector<int>(v[0].size()));
+    if(v.empty() || v[0].empty()) cost = 0;
+    else
+    {
+        dpPathCost[0][0] = v[0][0];
+
+        for(int i = 1; i < v.size(); i++)
+        {
+            dpPathCost[i][0] = dpPathCost[i-1][0] + v[i][0];
+        }
+        for(int i = 1; i < v[0].size(); i++)
+        {
+            dpPathCost[0][i] = dpPathCost[0][i-1] + v[0][i];
+        }
+        for(int i = 1; i < v.size(); i++)
+        {
+            for(int j = 1; j < v[i].size(); j++)
+            {
+                dpPathCost[i][j] = std::min(dpPathCost[i-1][j], dpPathCost[i][j-1]) + v[i][j];
+            }
+        }
+        cost = dpPathCost[dpPathCost.size()-1][dpPathCost[0].size()-1];
+    }
+}
+
 Field::Field(const std::vector<std::vector<int>> &v)
 {
     if(v.empty()) return;
@@ -105,33 +132,6 @@ int Field::Weight(int x1, int y1, int x2, int y2) const
     if(leftSquare) return dp[endy][endx] - dp[starty-1][endx];
     return dp[endy][endx] - dp[starty+1][startx-1] - dp[starty-1][startx+1] + dp[starty-1][startx-1];
 
-}
-
-void Field::computePathCost(const std::vector<std::vector<int>> &v)
-{
-    std::vector<std::vector<int>> dpPathCost(v.size(), std::vector<int>(v[0].size()));
-    if(v.empty() || v[0].empty()) cost = 0;
-    else
-    {
-        dpPathCost[0][0] = v[0][0];
-
-        for(int i = 1; i < v.size(); i++)
-        {
-            dpPathCost[i][0] = dpPathCost[i-1][0] + v[i][0];
-        }
-        for(int i = 1; i < v[0].size(); i++)
-        {
-            dpPathCost[0][i] = dpPathCost[0][i-1] + v[0][i];
-        }
-        for(int i = 1; i < v.size(); i++)
-        {
-            for(int j = 1; j < v[i].size(); j++)
-            {
-                dpPathCost[i][j] = std::min(dpPathCost[i-1][j], dpPathCost[i][j-1]) + v[i][j];
-            }
-        }
-        cost = dpPathCost[dpPathCost.size()-1][dpPathCost[0].size()-1];
-    }
 }
 
 int Field::PathCost() const
