@@ -34,6 +34,7 @@ audio_t AudioProcessor::CutOutSilence(const audio_t audio, short level, int sile
 
 audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
     audio_t res;
+    if(audio.size() < 1) return res;
     for(int i = 0; i < audio.size()-1; i++)
     {
         res.push_back(audio[i]);
@@ -47,7 +48,8 @@ audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
 audio_t AudioProcessor::Normalize(const audio_t audio, short normalizeTarget) {
     if(normalizeTarget < 1) throw std::invalid_argument("invalid normalizeTarget");
     audio_t res;
-    short largestElement = -SHRT_MAX;
+    if(audio.size() < 1) return res;
+    short largestElement = audio[0];
     for(const auto &it : audio)
     {
         short absElement = abs(it);
