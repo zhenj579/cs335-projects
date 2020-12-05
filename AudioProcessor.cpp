@@ -19,8 +19,10 @@ audio_t AudioProcessor::Compress(const audio_t &audio, short threshold, float ra
 
 audio_t AudioProcessor::CutOutSilence(const audio_t audio, short level, int silenceLength) {
     if(level < 0 || silenceLength < 1) throw std::invalid_argument("invalid level or silenceLength");
-    audio_t res(audio);
-    for(int i = 0; i < res.size()-1; i++)
+    audio_t res;
+    if(audio.size() == 1 && silenceLength == 1 && audio[0] >= -1*level && audio[0] <= level) return res;
+    res = audio;
+    for(int i = 0; i < audio.size()-1; i++)
     {
         if(res[i] >= -1*level && res[i] <= level)
         {
@@ -34,7 +36,6 @@ audio_t AudioProcessor::CutOutSilence(const audio_t audio, short level, int sile
 
 audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
     audio_t res;
-    if(audio.size() < 1) return res;
     for(int i = 0; i < audio.size()-1; i++)
     {
         res.push_back(audio[i]);
