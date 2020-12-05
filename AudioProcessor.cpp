@@ -36,13 +36,16 @@ audio_t AudioProcessor::CutOutSilence(const audio_t audio, short level, int sile
 
 audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
     audio_t res;
-    for(int i = 0; i < audio.size()-1; i++)
+    if(audio.size() >= 1)
     {
-        res.push_back(audio[i]);
-        short avg = round(((double)audio[i] + audio[i+1])/2);
-        res.push_back(avg);
+        for(int i = 0; i < audio.size()-1; i++)
+        {
+            res.push_back(audio[i]);
+            short avg = round(((double)audio[i] + audio[i+1])/2);
+            res.push_back(avg);
+        }
+        res.push_back(audio[audio.size()-1]);
     }
-    res.push_back(audio[audio.size()-1]);
     return res;
 }
 
