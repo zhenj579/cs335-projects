@@ -17,7 +17,7 @@ audio_t AudioProcessor::Compress(const audio_t &audio, short threshold, float ra
     return res;
 }
 
-audio_t AudioProcessor::CutOutSilence(const audio_t audio, short level, int silenceLength) {
+audio_t AudioProcessor::CutOutSilence(const audio_t &audio, short level, int silenceLength) {
     if(level < 0 || silenceLength < 1) throw std::invalid_argument("invalid level or silenceLength");
     audio_t res;
     if(audio.size() == 1 && silenceLength == 1 && audio[0] >= -1*level && audio[0] <= level) return res;
@@ -49,7 +49,7 @@ audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
     return res;
 }
 
-audio_t AudioProcessor::Normalize(const audio_t audio, short normalizeTarget) {
+audio_t AudioProcessor::Normalize(const audio_t &audio, short normalizeTarget) {
     if(normalizeTarget < 1) throw std::invalid_argument("invalid normalizeTarget");
     audio_t res;
     if(audio.size() < 1) return res;
