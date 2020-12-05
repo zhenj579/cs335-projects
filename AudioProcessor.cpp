@@ -22,7 +22,7 @@ audio_t AudioProcessor::CutOutSilence(const audio_t audio, short level, int sile
     audio_t res;
     if(audio.size() == 1 && silenceLength == 1 && audio[0] >= -1*level && audio[0] <= level) return res;
     res = audio;
-    for(int i = 0; i < audio.size()-1; i++)
+    for(int i = 0; i < res.size(); i++)
     {
         if(res[i] >= -1*level && res[i] <= level)
         {
