@@ -3,16 +3,19 @@
 audio_t AudioProcessor::Compress(const audio_t &audio, short threshold, float rate) {
     if(threshold < 0 || rate < 1.0) throw std::invalid_argument("invalid threshold or rate");
     audio_t res;
-    for(const auto &it : audio)
+    if(!audio.empty())
     {
-        bool neg = it < 0;
-        if(it < -1*threshold || it > threshold)
+        for(const auto &it : audio)
         {
-            short val = round(((double)(abs(it)-threshold))/rate + threshold);
-            if(neg) val*=-1;
-            res.push_back(val);
+            bool neg = it < 0;
+            if(it < -1*threshold || it > threshold)
+            {
+                short val = round(((double)(abs(it)-threshold))/rate + threshold);
+                if(neg) val*=-1;
+                res.push_back(val);
+            }
+            else res.push_back(it);
         }
-        else res.push_back(it);
     }
     return res;
 }
@@ -20,7 +23,7 @@ audio_t AudioProcessor::Compress(const audio_t &audio, short threshold, float ra
 audio_t AudioProcessor::CutOutSilence(const audio_t &audio, short level, int silenceLength) {
     if(level < 0 || silenceLength < 1) throw std::invalid_argument("invalid level or silenceLength");
     audio_t res;
-    if(audio.size() == 1 && silenceLength == 1 && audio[0] >= -1*level && audio[0] <= level) return res;
+    if(audio.empty() || (audio.size() == 1 && silenceLength == 1 && audio[0] >= -1*level && audio[0] <= level)) return res;
     res = audio;
     for(int i = 0; i < res.size(); i++)
     {
@@ -36,7 +39,7 @@ audio_t AudioProcessor::CutOutSilence(const audio_t &audio, short level, int sil
 
 audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
     audio_t res;
-    if(audio.size() >= 1)
+    if(audio.size() >= 2)
     {
         for(int i = 0; i < audio.size()-1; i++)
         {
@@ -46,20 +49,24 @@ audio_t AudioProcessor::StretchTwice(const audio_t &audio) {
         }
         res.push_back(audio[audio.size()-1]);
     }
+    else
+    {
+        res = audio;
+    }
     return res;
 }
 
 audio_t AudioProcessor::Normalize(const audio_t &audio, short normalizeTarget) {
     if(normalizeTarget < 1) throw std::invalid_argument("invalid normalizeTarget");
     audio_t res;
-    if(audio.size() < 1) return res;
+    if(audio.empty()) return res;
     short largestElement = audio[0];
     for(const auto &it : audio)
     {
         short absElement = abs(it);
         largestElement = std::max(largestElement, absElement);
     }
-    double x = (double)normalizeTarget/largestElement;
+    double x = largestElement == 0 ? 1 : (double)normalizeTarget/largestElement;
     for(const auto &it : audio) res.push_back(round(x*it));
     return res;
 }
